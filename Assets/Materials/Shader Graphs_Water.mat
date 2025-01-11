@@ -41,16 +41,16 @@ Material:
     - _Alpha: 0.7
     - _Metallic: 0.168
     - _NormalScale: 98.79
-    - _NormalStrength: 2
+    - _NormalStrength: 7.81
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _RippleDissolve: 8.2
-    - _RippleSize: 259.1
-    - _RippleSpeed: 2.55
+    - _RippleDissolve: 8.1
+    - _RippleSize: 281
+    - _RippleSpeed: 2.8
     - _Smoothness: 0.815
     m_Colors:
     - _BaseColor: {r: 0, g: 0.2602675, b: 1, a: 0}
-    - _NormalSpeed: {r: 0.01, g: 0.01, b: 0, a: 0}
+    - _NormalSpeed: {r: 0.004, g: 0.004, b: 0, a: 0}
     - _RippleColor: {r: 0.3724635, g: 0.6699921, b: 0.8490566, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &1508215462725663232
