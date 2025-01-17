@@ -64,6 +64,9 @@
     <Compile Include="Assets\Scripts\ButtonManager.cs" />
     <Compile Include="Assets\Scripts\CameraControls.cs" />
     <Compile Include="Assets\Scripts\Diskbots\Crowma.cs" />
+    <Compile Include="Assets\Scripts\ButtonInteractable.cs" />
+    <Compile Include="Assets\Scripts\InteractableClickHandler.cs" />
+    <Compile Include="Assets\Scripts\Interactable.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

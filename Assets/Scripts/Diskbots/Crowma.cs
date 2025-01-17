@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Crowma : MonoBehaviour
+public class Crowma : Interactable
 {
     // Public variables to adjust min and max wait time in the Inspector
     public float minWaitTime = 1f;
@@ -41,5 +41,18 @@ public class Crowma : MonoBehaviour
             // Pick a new random delay
             delay = Random.Range(minWaitTime, maxWaitTime);
         }
+    }
+
+    public override void OnInteract()
+    {
+        animator.SetTrigger("Ability");
+    }
+    public override void OnHover()
+    {
+        base.OnHover();
+    }
+    public override void OnHoverExit()
+    {
+        base.OnHoverExit();
     }
 }
