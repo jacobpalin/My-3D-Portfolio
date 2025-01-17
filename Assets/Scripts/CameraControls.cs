@@ -6,17 +6,14 @@ using UnityEngine.UI;
 public class CameraControls : MonoBehaviour
 {
     public Transform target;             // The object to orbit around
-    public float defaultRotationSpeed = 100f; // Default rotation speed
-    public float zoomSpeed = 10f;         // Speed of zooming
-    public float minZoom = 2f;            // Minimum zoom distance
-    public float maxZoom = 20f;           // Maximum zoom distance
-    public float transitionDuration = 1.5f; // Duration of the smooth transition
-    public List<Transform> islands;      // List of island transforms
-
     public GameObject canvasObj;
-    public Slider zoomSlider;             // Reference to the zoom slider UI element
-    public Slider rotationSpeedSlider;    // Reference to the rotation speed slider UI element
-
+    public DeviceDetector detector;
+    public float defaultRotationSpeed; // Default rotation speed
+    public float zoomSpeed;         // Speed of zooming
+    public float minZoom;            // Minimum zoom distance
+    public float maxZoom;           // Maximum zoom distance
+    public float transitionDuration; // Duration of the smooth transition
+    public List<Transform> islands;      // List of island transforms
 
     private float rotationSpeed;          // Current rotation speed
     private Vector3 offset;               // Offset from the target to the camera
@@ -28,26 +25,16 @@ public class CameraControls : MonoBehaviour
 
     private bool isPointerOverUI;         // Tracks if the pointer is over any slider
 
+
     void Start()
     {
+        if (detector.CheckIfMobile() == false)
+        {
+            defaultRotationSpeed = 700;
+        }
+
         offset = transform.position - target.position;
         currentZoom = offset.magnitude;
-
-        if (zoomSlider != null)
-        {
-            zoomSlider.minValue = minZoom;
-            zoomSlider.maxValue = maxZoom;
-            zoomSlider.value = currentZoom;
-            zoomSlider.onValueChanged.AddListener(OnZoomSliderChanged);
-        }
-
-        if (rotationSpeedSlider != null)
-        {
-            rotationSpeedSlider.minValue = 5f;
-            rotationSpeedSlider.maxValue = 1000f;
-            rotationSpeedSlider.value = defaultRotationSpeed;
-            rotationSpeedSlider.onValueChanged.AddListener(OnRotationSpeedSliderChanged);
-        }
 
         rotationSpeed = defaultRotationSpeed;
         currentRotationX = transform.eulerAngles.x;
@@ -60,6 +47,7 @@ public class CameraControls : MonoBehaviour
     {
         if (isCycling) return;
 
+        // Handle rotation with mouse input
         if (!isPointerOverUI && Input.GetMouseButton(0))
         {
             float mouseX = Input.GetAxis("Mouse X") * rotationSpeed * Time.deltaTime;
@@ -70,11 +58,27 @@ public class CameraControls : MonoBehaviour
             currentRotationX = Mathf.Clamp(currentRotationX, -85f, 85f);
         }
 
+        // Handle zoom with scroll wheel (desktop)
         float scroll = Input.GetAxis("Mouse ScrollWheel") * zoomSpeed;
         if (scroll != 0 && !isPointerOverUI)
         {
             currentZoom = Mathf.Clamp(currentZoom - scroll, minZoom, maxZoom);
-            if (zoomSlider != null) zoomSlider.value = currentZoom;
+        }
+
+        if (Input.touchCount == 2)
+        {
+            Touch touch0 = Input.GetTouch(0);
+            Touch touch1 = Input.GetTouch(1);
+
+            Vector2 touch0PrevPos = touch0.position - touch0.deltaPosition;
+            Vector2 touch1PrevPos = touch1.position - touch1.deltaPosition;
+
+            float prevTouchDeltaMag = (touch0PrevPos - touch1PrevPos).magnitude;
+            float touchDeltaMag = (touch0.position - touch1.position).magnitude;
+
+            float deltaMagnitudeDiff = prevTouchDeltaMag - touchDeltaMag;
+
+            currentZoom = Mathf.Clamp(currentZoom - deltaMagnitudeDiff * zoomSpeed * Time.deltaTime, minZoom, maxZoom);
         }
 
         // Handle island cycling via keyboard input
@@ -92,9 +96,11 @@ public class CameraControls : MonoBehaviour
     {
         if (isCycling) return;
 
+        // Calculate new position based on current rotation and zoom
         Quaternion rotation = Quaternion.Euler(currentRotationX, currentRotationY, 0);
         Vector3 newOffset = rotation * Vector3.back * currentZoom;
 
+        // Set camera position and rotation
         transform.position = target.position + newOffset;
         transform.LookAt(target);
     }
@@ -175,7 +181,6 @@ public class CameraControls : MonoBehaviour
             yield return null;
         }
 
-        zoomSlider.value = currentZoom;
         transform.rotation = targetRotation;
         transform.position = target.position + (targetRotation * Vector3.forward * -currentZoom);
         currentRotationY = transform.eulerAngles.y;
