@@ -18,12 +18,17 @@ public class ButtonManager : MonoBehaviour
 
     public void YoutubeButton()
     {
-        Application.OpenURL("https://www.youtube.com/@Jacob-Palin");
+        Application.OpenURL("https://www.youtube.com/@JacobPalin_MiniMageGames");
     }
 
     public void DiskbotsButton()
     {
         Application.OpenURL("https://www.youtube.com/watch?v=yODe6TaV0Jw&list=PLP1VMbm9_UkTMyVC5MtyND_v31EyWM8gX");
+    }
+
+    public void ShapeGrinderButton()
+    {
+        Application.OpenURL("https://apps.apple.com/us/app/shape-grinder/id6746218383");
     }
 
     public void NextIslandButton()

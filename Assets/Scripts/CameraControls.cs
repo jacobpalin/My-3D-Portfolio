@@ -24,6 +24,7 @@ public class CameraControls : MonoBehaviour
     public int currentIslandIndex;       // Index of the currently focused island
 
     private bool isPointerOverUI;         // Tracks if the pointer is over any slider
+    public Transform startPosition;
 
 
     void Start()
@@ -33,6 +34,9 @@ public class CameraControls : MonoBehaviour
             defaultRotationSpeed = 700;
         }
 
+        transform.position = startPosition.position;
+        transform.rotation = Quaternion.Euler(startPosition.eulerAngles.x, startPosition.eulerAngles.y, startPosition.eulerAngles.z);
+
         offset = transform.position - target.position;
         currentZoom = offset.magnitude;
 
@@ -41,6 +45,7 @@ public class CameraControls : MonoBehaviour
         currentRotationY = transform.eulerAngles.y;
 
         currentIslandIndex = 0; // Start at the first island
+        StartCoroutine(CycleTransition(currentIslandIndex));
     }
 
     void Update()
@@ -141,7 +146,7 @@ public class CameraControls : MonoBehaviour
         float zoomInTime = .6f;
         float elapsedTime = 0f;
         float zoomInTarget = minZoom;
-        float zoomOutTarget = maxZoom;
+        float zoomOutTarget = 20f;
         float lastZoom = currentZoom;
 
         // Zoom out smoothly before rotating
